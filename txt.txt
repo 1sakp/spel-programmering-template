@@ -1,0 +1,5 @@
+läsa in data från andra källor.
+Man kan använda t.ex exel.
+.txt filer.
+
+

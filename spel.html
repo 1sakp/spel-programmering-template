@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombie game</title>
+</head>
+<body>
+
+    
+
+    <script src="simple.js">
+
+        loopSound("doom.mp3");
+
+        var powerup_s = {
+            x: random(0, 1500),
+            y: random(80, 900)
+        };
+
+        var powerup_h = {
+            x: random(0, 1500),
+            y: random(80, 900)
+        };
+
+        var powerup_a = {
+            x: random(0, 1500),
+            y: random(80, 900)
+        };
+
+        var score_visual = {
+            x: random(0, 1900),
+            y: random(80, 900)
+        };
+
+        var player = {
+            x: 500,
+            y: 600,
+            speed: 1
+        };
+
+        var player2 = {
+            x: 600,
+            y: 500
+        };
+
+        var zombies  = [];
+
+        var  i = 0;
+        while (i < 10000) {
+            zombies.push({
+            x: random(0, 2000),
+            y: (0),
+            speed: random(1, 4)});
+            i+= 1;
+        };
+
+        var HP = 100
+        var ammo = 10
+        let numzomb = 10
+
+        var score = 0
+
+        alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!");
+
+        function update() {
+            clearScreen();
+
+            if (player.x > 1900){
+                player.x = 0
+            }
+            if (player.x < 0){
+                player.x = 1900
+            }
+            if (player.y > 900){
+                player.y = 0
+            }
+            if (player.y < 0){
+                player.y = 900
+            }
+
+            if (player2.x > 1900){
+                player2.x = 0
+            }
+            if (player2.x < 0){
+                player2.x = 1900
+            }
+            if (player2.y > 900){
+                player2.y = 0
+            }
+            if (player2.y < 0){
+                player2.y = 900
+            }
+
+
+            if (distance (player.x, player.y, powerup_h.x, powerup_h.y) < 50) {
+                HP += 50
+                powerup_h.x = random(0, 1500)
+                powerup_h.y = random(80, 900)
+            };
+
+            if (distance (player.x, player.y, powerup_a.x, powerup_a.y) < 50) {
+                ammo += 5
+                powerup_a.x = random(0, 1500)
+                powerup_a.y = random(80, 900)
+            };
+
+            if (distance (player2.x, player2.y, powerup_h.x, powerup_h.y) < 50) {
+                HP += 50
+                powerup_h.x = random(0, 1500)
+                powerup_h.y = random(80, 900)
+            };
+
+            if (distance (player2.x, player2.y, powerup_a.x, powerup_a.y) < 50) {
+                ammo += 5
+                powerup_a.x = random(0, 1500)
+                powerup_a.y = random(80, 900)
+            };
+
+
+            var i = 0;
+            while (i < numzomb) {
+                var zombie = zombies[i];
+                i += 1;
+                
+                rectangle(50, 50, HP*2, 50, "red")
+                rectangle(50, 100, ammo*2, 50, "brown")
+
+                picture(powerup_a.x, powerup_a.y, "ammo.png")
+                picture(score_visual.x, score_visual.y, "coin.png")
+                picture(powerup_h.x, powerup_h.y, "hpkit.png")
+                picture(player.x, player.y, "pixil-layer-Background.png")
+                picture(player2.x, player2.y, "pixil-layer-Background.png")
+                picture(zombie.x, zombie.y, "xomb.png");
+
+                if (distance (player.x, player.y, zombie.x+0, zombie.y+0) < 50) {
+                    HP -= 1;
+                    if (HP < 1){
+                        stopUpdate();
+                        alert ("score:  "+score);
+                    };
+                };
+
+                if (distance (player2.x, player2.y, zombie.x+0, zombie.y+0) < 50) {
+                    HP -= 1;
+                    if (HP < 1){
+                        stopUpdate();
+                        alert ("score:  "+score);
+                    };
+                };
+
+                if (keyboard.space){
+                    if (ammo > 0){
+                        if (distance(mouse.x, mouse.y, zombie.x+50, zombie.y+50) < 50 ){
+                            zombie.x = random(0, 2000);
+                            zombie.y = 0;
+                            numzomb += 1;
+                            ammo -= 1;
+                            score += 0.5;
+                            playSound("kill", 1)
+                        };
+                    };
+                };  
+
+                if (keyboard.a){
+                    player.x -= player.speed
+                };
+                if (keyboard.d){
+                    player.x += player.speed
+                };
+                if (keyboard.s){
+                    player.y += player.speed
+                };
+                if (keyboard.w){
+                    player.y -= player.speed
+                };
+
+                if (keyboard.left){
+                    player2.x -= player.speed
+                };
+                if (keyboard.right){
+                    player2.x += player.speed
+                };
+                if (keyboard.down){
+                    player2.y += player.speed
+                };
+                if (keyboard.up){
+                    player2.y -= player.speed
+                };
+
+                if (distance (player.x, player.y, zombie.x, zombie.y) < distance (player2.x, player2.y, zombie.x, zombie.y)){
+                    if (zombie.x < player.x)
+                        zombie.x += zombie.speed;
+                    else 
+                        zombie.x -= zombie.speed;
+
+                    if (zombie.y < player.y)
+                        zombie.y += zombie.speed;
+                    else 
+                        zombie.y -= zombie.speed;
+                };
+
+                if (distance (player.x, player.y, zombie.x, zombie.y) > distance (player2.x, player2.y, zombie.x, zombie.y)){
+                    if (zombie.x < player2.x)
+                        zombie.x += zombie.speed;
+                    else 
+                        zombie.x -= zombie.speed;
+
+                    if (zombie.y < player2.y)
+                        zombie.y += zombie.speed;
+                    else 
+                        zombie.y -= zombie.speed;
+                };
+                
+                if (distance (player.x, player.y, score_visual.x, score_visual.y) < 50) {
+                    score += 1
+                    numzomb += 1
+                    score_visual.x = random(0, 1500)
+                    score_visual.y = random(80, 900)
+                };
+
+                if (distance (player2.x, player2.y, score_visual.x, score_visual.y) < 50) {
+                    score += 1
+                    numzomb += 1
+                    score_visual.x = random(0, 1500)
+                    score_visual.y = random(80, 900)
+                };
+                
+            };
+                
+
+        }
+          
+               
+            
+
+
+        </script>
+    </body>
+</html>

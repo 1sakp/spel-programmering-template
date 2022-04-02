@@ -12,7 +12,7 @@
 
     <script src="simple.js">
 
-        loopSound("doom.mp3");
+        loopSound("mp3/doom.mp3");
 
         var powerup_s = {
             x: random(0, 1500),
@@ -58,11 +58,6 @@
         var score = 0
 
         alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!")
-
-
-        if (1+1==2){
-            loopSound("doom.mp3", 1);
-        }
         
         function update() {
             clearScreen();
@@ -101,11 +96,11 @@
                 rectangle(50, 50, HP*2, 50, "red")
                 rectangle(50, 100, ammo*2, 50, "brown")
 
-                picture(powerup_a.x, powerup_a.y, "ammo.png")
-                picture(score_visual.x, score_visual.y, "coin.png")
-                picture(powerup_h.x, powerup_h.y, "hpkit.png")
-                picture(player.x, player.y, "pixil-layer-Background.png")
-                picture(zombie.x, zombie.y, "xomb.png");
+                picture(powerup_a.x, powerup_a.y, "png/ammo.png")
+                picture(score_visual.x, score_visual.y, "png/coin.png")
+                picture(powerup_h.x, powerup_h.y, "png/hpkit.png")
+                picture(player.x, player.y, "png/pixil-layer-Background.png")
+                picture(zombie.x, zombie.y, "png/xomb.png");
 
                 if (distance (player.x, player.y, zombie.x+0, zombie.y+0) < 50) {
                     HP -= 1;
@@ -123,7 +118,7 @@
                             numzomb += 1;
                             ammo -= 1;
                             score += 0.5;
-                            playSound("kill")
+                            playSound("mp3/kill.mp3")
                         };
                     };
                 };  

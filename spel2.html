@@ -12,8 +12,10 @@
 
     <script src="simple.js">
 
+        //Bakrundsljud
         loopSound("mp3/doom.mp3");
 
+        //definering av pickups
         var powerup_s = {
             x: random(0, 1500),
             y: random(80, 900)
@@ -34,14 +36,19 @@
             y: random(80, 900)
         };
 
+
+        //definering av zombies och spelare
         var player = {
             x: 500,
             y: 600,
             speed: 1
         };
 
+
+        //skapar en lista som zombies blir inkörda och däför kan ha flera
         var zombies  = [];
 
+        //definerar zombies och kör in dem i listan
         var  i = 0;
         while (i < 10000) {
             zombies.push({
@@ -51,18 +58,23 @@
             i+= 1;
         };
 
+
+        //definerar "counters" altså saker som datorn behöver hålla reda på
+        //det innehåller också numzomb som bestämer hur många zombies som ska spawna
         var HP = 100
         var ammo = 10
         let numzomb = 10
-
         var score = 0
 
+
+        //regler
         alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!")
         
+        //update blir spamm kallad av datorn så den uppdaterar så ofta den kan
         function update() {
             clearScreen();
             
-
+            //kollar om man är utanför skärmen (om skärmen är 1900x900) och isåfall skickar tillbaka en till andra sidan
             if (player.x > 1900){
                 player.x = 0
             }
@@ -76,6 +88,9 @@
                 player.y = 900
             }
 
+
+
+            //gör så man "plockar upp" saker
             if (distance (player.x, player.y, powerup_h.x, powerup_h.y) < 50) {
                 HP += 50
                 powerup_h.x = random(0, 1500)
@@ -88,20 +103,27 @@
                 powerup_a.y = random(80, 900)
             };
 
+            //spawnar zombies och gör så fler kan spawna om numzomb ökar
             var i = 0;
             while (i < numzomb) {
+                //definerar så man bl.a kan ha bilder genom att ticka upp i listan
                 var zombie = zombies[i];
                 i += 1;
-                
+
+
+                //hp bar och ammo bar
                 rectangle(50, 50, HP*2, 50, "red")
                 rectangle(50, 100, ammo*2, 50, "brown")
 
+
+                //gör så bilderna är där dem ska
                 picture(powerup_a.x, powerup_a.y, "png/ammo.png")
                 picture(score_visual.x, score_visual.y, "png/coin.png")
                 picture(powerup_h.x, powerup_h.y, "png/hpkit.png")
                 picture(player.x, player.y, "png/pixil-layer-Background.png")
                 picture(zombie.x, zombie.y, "png/xomb.png");
 
+                //mer pickup
                 if (distance (player.x, player.y, zombie.x+0, zombie.y+0) < 50) {
                     HP -= 1;
                     if (HP < 1){
@@ -110,6 +132,8 @@
                     };
                 };
 
+
+                //gör så att man kan klicka och på så sett skjuta zombies
                 if (keyboard.space){
                     if (ammo > 0){
                         if (distance(mouse.x, mouse.y, zombie.x+50, zombie.y+50) < 50 ){
@@ -123,6 +147,8 @@
                     };
                 };  
 
+
+                //rörelse
                 if (keyboard.a){
                     player.x -= player.speed
                 };
@@ -146,6 +172,8 @@
                 else 
                     zombie.y -= zombie.speed;
                 
+
+                //ennu en sak man plockar upp
                 if (distance (player.x, player.y, score_visual.x, score_visual.y) < 50) {
                     score += 1
                     numzomb += 1

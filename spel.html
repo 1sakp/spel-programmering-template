@@ -12,8 +12,10 @@
 
     <script src="simple.js">
 
+        //Bakrundsljud
         loopSound("mp3/doom.mp3");
 
+        //start av definering av pickups
         var powerup_s = {
             x: random(0, 1500),
             y: random(80, 900)
@@ -33,7 +35,10 @@
             x: random(0, 1900),
             y: random(80, 900)
         };
+        //slut av definering
 
+
+        //definering av zombies och spelare
         var player = {
             x: 500,
             y: 600,
@@ -45,8 +50,11 @@
             y: 500
         };
 
-        var zombies  = [];
 
+        //skapar en lista som zombies blir inkörda och däför kan ha flera
+        var zombies  = [];
+        
+        //definerar zombies och kör in dem i listan
         var  i = 0;
         while (i < 10000) {
             zombies.push({
@@ -56,17 +64,27 @@
             i+= 1;
         };
 
+
+        //definerar "counters" altså saker som datorn behöver hålla reda på
+        //det innehåller också numzomb som bestämer hur många zombies som ska spawna
         var HP = 100
         var ammo = 10
-        let numzomb = 10
-
+        var numzomb = 10
         var score = 0
 
+
+        //säger reglerna
         alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!");
 
+        //update blir spamm kallad av datorn så den uppdaterar så ofta den kan
         function update() {
+
+
+            //håller skärmen ren
             clearScreen();
 
+
+            //kollar om man är utanför skärmen (om skärmen är 1900x900) och isåfall skickar tillbaka en till andra sidan
             if (player.x > 1900){
                 player.x = 0
             }
@@ -94,6 +112,8 @@
             }
 
 
+
+            //gör så man "plockar upp" saker
             if (distance (player.x, player.y, powerup_h.x, powerup_h.y) < 50) {
                 HP += 50
                 powerup_h.x = random(0, 1500)
@@ -119,14 +139,20 @@
             };
 
 
+            //spawnar zombies och gör så fler kan spawna om numzomb ökar
             var i = 0;
             while (i < numzomb) {
+                //definerar så man bl.a kan ha bilder genom att ticka upp i listan
                 var zombie = zombies[i];
                 i += 1;
                 
+
+                //hp bar och ammo bar
                 rectangle(50, 50, HP*2, 50, "red")
                 rectangle(50, 100, ammo*2, 50, "brown")
 
+
+                //gör så bilderna är där dem ska
                 picture(powerup_a.x, powerup_a.y, "png/ammo.png")
                 picture(score_visual.x, score_visual.y, "png/coin.png")
                 picture(powerup_h.x, powerup_h.y, "png/hpkit.png")
@@ -134,6 +160,8 @@
                 picture(player2.x, player2.y, "png/pixil-layer-Background.png")
                 picture(zombie.x, zombie.y, "png/xomb.png");
 
+
+                //mer pickup
                 if (distance (player.x, player.y, zombie.x+0, zombie.y+0) < 50) {
                     HP -= 1;
                     if (HP < 1){
@@ -150,6 +178,8 @@
                     };
                 };
 
+
+                //gör så att man kan klicka och på så sett skjuta zombies
                 if (keyboard.space){
                     if (ammo > 0){
                         if (distance(mouse.x, mouse.y, zombie.x+50, zombie.y+50) < 50 ){
@@ -163,6 +193,8 @@
                     };
                 };  
 
+
+                //rörelse
                 if (keyboard.a){
                     player.x -= player.speed
                 };
@@ -189,6 +221,8 @@
                     player2.y -= player.speed
                 };
 
+
+                //kollar om zombisarna är nermre spelare 1 eller spelare 2 och går till den närmsta
                 if (distance (player.x, player.y, zombie.x, zombie.y) < distance (player2.x, player2.y, zombie.x, zombie.y)){
                     if (zombie.x < player.x)
                         zombie.x += zombie.speed;
@@ -213,6 +247,8 @@
                         zombie.y -= zombie.speed;
                 };
                 
+
+                //ennu en sak man plockar upp
                 if (distance (player.x, player.y, score_visual.x, score_visual.y) < 50) {
                     score += 1
                     numzomb += 1

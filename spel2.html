@@ -15,7 +15,9 @@
         //Bakrundsljud
         loopSound("mp3/doom.mp3");
 
-        //definering av pickups
+        //start av definering av pickups
+        //definerar deras position i form av indeviduella x och y värden som sedan kan 
+        //ändras individuellt på olika variabler som har samma namn
         var powerup_s = {
             x: random(0, 1500),
             y: random(80, 900)
@@ -35,9 +37,11 @@
             x: random(0, 1900),
             y: random(80, 900)
         };
+        //slut av definering
 
 
         //definering av zombies och spelare
+        //här defineras indeviduella x värde och y värde och hastigheten som dem kan röra sig
         var player = {
             x: 500,
             y: 600,
@@ -45,10 +49,13 @@
         };
 
 
-        //skapar en lista som zombies blir inkörda och däför kan ha flera
+        //skapar en lista som zombies blir inkörda och däför kan ha flera med samma namn då man refererar till deras position
         var zombies  = [];
-
+        
         //definerar zombies och kör in dem i listan
+        //sätter ett max på 10000
+        //definerar deras x och y värden och speed när dem sätts in/pushas in i listan
+        //tickern i används sedan för att hålla koll på hur många zombies finns
         var  i = 0;
         while (i < 10000) {
             zombies.push({
@@ -63,18 +70,24 @@
         //det innehåller också numzomb som bestämer hur många zombies som ska spawna
         var HP = 100
         var ammo = 10
-        let numzomb = 10
+        var numzomb = 10
         var score = 0
 
 
-        //regler
-        alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!")
-        
-        //update blir spamm kallad av datorn så den uppdaterar så ofta den kan
+        //säger reglerna iett alert
+        alert("Röd bar = hp     brun bar = ammo     du får poeng genom att plocka upp mynt och genom att skuta zombies!");
+
+        //update funktionen blir spamm kallad av datorn så den uppdaterar så ofta den kan
         function update() {
+
+
+            //håller skärmen ren
             clearScreen();
-            
-            //kollar om man är utanför skärmen (om skärmen är 1900x900) och isåfall skickar tillbaka en till andra sidan
+
+
+            //kollar om man är utanför skärmen (om skärmen är 1900x900) och isåfall skickar en till andra sidan
+            //den kollar om man är utanför genom att kolla på x och y värdet och ser ifall de paserar en gräns
+            //och om det gör det så skickas du till andra sidan
             if (player.x > 1900){
                 player.x = 0
             }
@@ -89,8 +102,9 @@
             }
 
 
-
-            //gör så man "plockar upp" saker
+            //gör så man "plockar upp" saker genom att kolla hur nära man är hela tiden.
+            //om man är närmare en vad den distansen är satt på så tp powerupen till en annan position
+            //den ger dock först sin effect, det kan vara att den ger dig mer liv eller ammo
             if (distance (player.x, player.y, powerup_h.x, powerup_h.y) < 50) {
                 HP += 50
                 powerup_h.x = random(0, 1500)
@@ -103,27 +117,32 @@
                 powerup_a.y = random(80, 900)
             };
 
-            //spawnar zombies och gör så fler kan spawna om numzomb ökar
+
+            //spawnar zombies och gör så fler kan spawna om numzomb ökar då den spawnar zombies om i är
+            //mindre en numzomb, och därför kan öka antalet zombies genom att öka numzomb.
             var i = 0;
             while (i < numzomb) {
                 //definerar så man bl.a kan ha bilder genom att ticka upp i listan
                 var zombie = zombies[i];
                 i += 1;
-
+                
 
                 //hp bar och ammo bar
+                //blir större genom att ha en variabel som ökar
                 rectangle(50, 50, HP*2, 50, "red")
                 rectangle(50, 100, ammo*2, 50, "brown")
 
 
-                //gör så bilderna är där dem ska
+                //gör så bilderna är där dem ska och följer det dem ska
                 picture(powerup_a.x, powerup_a.y, "png/ammo.png")
                 picture(score_visual.x, score_visual.y, "png/coin.png")
                 picture(powerup_h.x, powerup_h.y, "png/hpkit.png")
                 picture(player.x, player.y, "png/pixil-layer-Background.png")
                 picture(zombie.x, zombie.y, "png/xomb.png");
 
-                //mer pickup
+
+                //mer pickup och kollar om man är död genom att se om hp är mindre en 1 och isåfall avslutar och visar dig dina poeng
+                //denna uppdateras varje gång man tar skada
                 if (distance (player.x, player.y, zombie.x+0, zombie.y+0) < 50) {
                     HP -= 1;
                     if (HP < 1){
@@ -133,7 +152,10 @@
                 };
 
 
-                //gör så att man kan klicka och på så sett skjuta zombies
+                //gör så att man kan klicka och på så sett skjuta zombies genom att klicka på space
+                //då kollar koden om man är nära zombisen med muspekaren och om man har ammo och om båda uppfylls
+                //så tp zombisen och skapas en ny genom att öka numzomb
+                //man får också poeng
                 if (keyboard.space){
                     if (ammo > 0){
                         if (distance(mouse.x, mouse.y, zombie.x+50, zombie.y+50) < 50 ){
@@ -142,13 +164,14 @@
                             numzomb += 1;
                             ammo -= 1;
                             score += 0.5;
-                            playSound("mp3/kill.mp3")
+                            playSound("mp3/kill.mp3");
                         };
                     };
                 };  
 
 
                 //rörelse
+                //man rör sig i förhållande till riktningen plus eller minus speed
                 if (keyboard.a){
                     player.x -= player.speed
                 };
@@ -162,24 +185,29 @@
                     player.y -= player.speed
                 };
 
-                if (zombie.x < player.x)
-                    zombie.x += zombie.speed;
-                else 
-                    zombie.x -= zombie.speed;
 
-                if (zombie.y < player.y)
-                    zombie.y += zombie.speed;
-                else 
-                    zombie.y -= zombie.speed;
+                //kollar om zombisarna är nermre spelare 1 eller spelare 2 och går till den närmsta genom att 
+                //kolla om spelarens x eller y är större eller mindre och ökar eller sänker sin egen motsvarande x och y för att närma sig spelarens
+                if (distance (player.x, player.y, zombie.x, zombie.y) < distance (player2.x, player2.y, zombie.x, zombie.y)){
+                    if (zombie.x < player.x)
+                        zombie.x += zombie.speed;
+                    else 
+                        zombie.x -= zombie.speed;
+
+                    if (zombie.y < player.y)
+                        zombie.y += zombie.speed;
+                    else 
+                        zombie.y -= zombie.speed;
+                };
                 
 
-                //ennu en sak man plockar upp
+                //ennu en sak man plockar upp fungerar på samma sätt som dem andra puckups men ökar zombisarna också
                 if (distance (player.x, player.y, score_visual.x, score_visual.y) < 50) {
                     score += 1
                     numzomb += 1
                     score_visual.x = random(0, 1500)
                     score_visual.y = random(80, 900)
-                };           
+                };
                 
             };
                 

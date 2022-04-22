@@ -188,18 +188,18 @@
 
                 //kollar om zombisarna är nermre spelare 1 eller spelare 2 och går till den närmsta genom att 
                 //kolla om spelarens x eller y är större eller mindre och ökar eller sänker sin egen motsvarande x och y för att närma sig spelarens
-                if (distance (player.x, player.y, zombie.x, zombie.y) < distance (player2.x, player2.y, zombie.x, zombie.y)){
-                    if (zombie.x < player.x)
-                        zombie.x += zombie.speed;
-                    else 
-                        zombie.x -= zombie.speed;
-
-                    if (zombie.y < player.y)
-                        zombie.y += zombie.speed;
-                    else 
-                        zombie.y -= zombie.speed;
-                };
                 
+                if (zombie.x < player.x)
+                    zombie.x += zombie.speed;
+                else 
+                    zombie.x -= zombie.speed;
+
+                if (zombie.y < player.y)
+                    zombie.y += zombie.speed;
+                else 
+                    zombie.y -= zombie.speed;
+                
+            
 
                 //ennu en sak man plockar upp fungerar på samma sätt som dem andra puckups men ökar zombisarna också
                 if (distance (player.x, player.y, score_visual.x, score_visual.y) < 50) {
